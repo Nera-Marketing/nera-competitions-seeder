@@ -41,10 +41,28 @@ class GG_Demo_Admin_Page {
 		$action = sanitize_key( wp_unslash( $_POST['gg_demo_action'] ) );
 		$slug   = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
 
-		$created = 0;
-		$skipped = 0;
-		$failed  = 0;
-		$wiped   = 0;
+		$created      = 0;
+		$skipped      = 0;
+		$failed       = 0;
+		$wiped        = 0;
+		$missing_deps = 0;
+
+		$tally = function ( $result ) use ( &$created, &$skipped, &$failed, &$missing_deps ) {
+			if ( is_wp_error( $result ) ) {
+				switch ( $result->get_error_code() ) {
+					case 'already_seeded':
+						$skipped++;
+						break;
+					case 'gg_demo_plugin_missing':
+						$missing_deps++;
+						break;
+					default:
+						$failed++;
+				}
+			} else {
+				$created++;
+			}
+		};
 
 		switch ( $action ) {
 			case 'seed_one':
@@ -53,12 +71,7 @@ class GG_Demo_Admin_Page {
 						if ( $spec['slug'] !== $slug ) {
 							continue;
 						}
-						$result = GG_Demo_Seeder::seed_one( $spec );
-						if ( is_wp_error( $result ) ) {
-							$result->get_error_code() === 'already_seeded' ? $skipped++ : $failed++;
-						} else {
-							$created++;
-						}
+						$tally( GG_Demo_Seeder::seed_one( $spec ) );
 						break;
 					}
 				}
@@ -66,12 +79,7 @@ class GG_Demo_Admin_Page {
 
 			case 'seed_all':
 				foreach ( GG_Demo_Seeder::get_definitions() as $spec ) {
-					$result = GG_Demo_Seeder::seed_one( $spec );
-					if ( is_wp_error( $result ) ) {
-						$result->get_error_code() === 'already_seeded' ? $skipped++ : $failed++;
-					} else {
-						$created++;
-					}
+					$tally( GG_Demo_Seeder::seed_one( $spec ) );
 				}
 				break;
 
@@ -82,12 +90,13 @@ class GG_Demo_Admin_Page {
 
 		$redirect = add_query_arg(
 			array(
-				'page'      => self::MENU_SLUG,
-				'gg_result' => 1,
-				'created'   => $created,
-				'skipped'   => $skipped,
-				'failed'    => $failed,
-				'wiped'     => $wiped,
+				'page'         => self::MENU_SLUG,
+				'gg_result'    => 1,
+				'created'      => $created,
+				'skipped'      => $skipped,
+				'failed'       => $failed,
+				'wiped'        => $wiped,
+				'missing_deps' => $missing_deps,
 			),
 			admin_url( 'tools.php' )
 		);
@@ -104,10 +113,11 @@ class GG_Demo_Admin_Page {
 			return;
 		}
 
-		$created = isset( $_GET['created'] ) ? (int) $_GET['created'] : 0;
-		$skipped = isset( $_GET['skipped'] ) ? (int) $_GET['skipped'] : 0;
-		$failed  = isset( $_GET['failed'] ) ? (int) $_GET['failed'] : 0;
-		$wiped   = isset( $_GET['wiped'] ) ? (int) $_GET['wiped'] : 0;
+		$created      = isset( $_GET['created'] ) ? (int) $_GET['created'] : 0;
+		$skipped      = isset( $_GET['skipped'] ) ? (int) $_GET['skipped'] : 0;
+		$failed       = isset( $_GET['failed'] ) ? (int) $_GET['failed'] : 0;
+		$wiped        = isset( $_GET['wiped'] ) ? (int) $_GET['wiped'] : 0;
+		$missing_deps = isset( $_GET['missing_deps'] ) ? (int) $_GET['missing_deps'] : 0;
 
 		$bits = array();
 		if ( $created ) {
@@ -133,11 +143,30 @@ class GG_Demo_Admin_Page {
 				esc_html( sprintf( _n( '%d product failed to seed. Check that WooCommerce and Lottery for WooCommerce are both active.', '%d products failed to seed. Check that WooCommerce and Lottery for WooCommerce are both active.', $failed, 'nera-competitions-seeder' ), $failed ) )
 			);
 		}
+
+		if ( $missing_deps ) {
+			printf(
+				'<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
+				esc_html( sprintf(
+					_n(
+						'%d product skipped — required plugin is not active. Check the table below for details.',
+						'%d products skipped — required plugin is not active. Check the table below for details.',
+						$missing_deps,
+						'nera-competitions-seeder'
+					),
+					$missing_deps
+				) )
+			);
+		}
 	}
 
 	public function render_page() {
 		$defs       = GG_Demo_Seeder::get_definitions();
 		$lottery_ok = class_exists( 'WC_Product_Lottery' );
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Nera Competitions Seeder', 'nera-competitions-seeder' ); ?></h1>
@@ -178,11 +207,13 @@ class GG_Demo_Admin_Page {
 				</thead>
 				<tbody>
 					<?php foreach ( $defs as $spec ) :
-						$record    = GG_Demo_Seeder::get_record( $spec['slug'] );
-						$id        = (int) $record['product_id'];
-						$exists    = $id && get_post( $id );
-						$tickets   = count( $record['ticket_ids'] );
-						$winners   = count( $record['winner_log_ids'] );
+						$record       = GG_Demo_Seeder::get_record( $spec['slug'] );
+						$id           = (int) $record['product_id'];
+						$exists       = $id && get_post( $id );
+						$tickets      = count( $record['ticket_ids'] );
+						$winners      = count( $record['winner_log_ids'] );
+						$dep_basename = isset( $spec['requires_plugin'] ) ? (string) $spec['requires_plugin'] : '';
+						$dep_missing  = $dep_basename && ! is_plugin_active( $dep_basename );
 					?>
 						<tr>
 							<td><strong><?php echo esc_html( $spec['title'] ); ?></strong></td>
@@ -212,12 +243,22 @@ class GG_Demo_Admin_Page {
 											?>
 										</small>
 									<?php endif; ?>
+								<?php elseif ( $dep_missing ) : ?>
+									<span style="color: #b32d2e;">
+										<?php
+										printf(
+											/* translators: %s = plugin basename */
+											esc_html__( 'Requires plugin: %s', 'nera-competitions-seeder' ),
+											'<code>' . esc_html( $dep_basename ) . '</code>'
+										);
+										?>
+									</span>
 								<?php else : ?>
 									<span style="color: #777;"><?php esc_html_e( 'Not seeded', 'nera-competitions-seeder' ); ?></span>
 								<?php endif; ?>
 							</td>
 							<td>
-								<?php if ( ! $exists && $lottery_ok ) : ?>
+								<?php if ( ! $exists && $lottery_ok && ! $dep_missing ) : ?>
 									<form method="post" style="display: inline;">
 										<?php wp_nonce_field( self::NONCE_ACTION ); ?>
 										<input type="hidden" name="gg_demo_action" value="seed_one">

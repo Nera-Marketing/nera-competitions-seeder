@@ -156,6 +156,76 @@ return array(
 	),
 
 	array(
+		'slug'            => 'demo-spin-to-win',
+		'title'           => 'Demo Spin To Win Wheel',
+		'variant'         => 'spin_to_win',
+		'requires_plugin' => 'nera-spin-to-win/nera-spin-to-win.php',
+		'price'           => 2.50,
+		'min_tickets'     => 100,
+		'max_tickets'     => 500,
+		'image_seed'      => 'spin-to-win',
+		'short'           => 'Spin the prize wheel after entry. Six segments — site credit, mystery box, headphones or try again.',
+		'description'     => '<p><strong>Every ticket spins the wheel.</strong></p>'
+			. '<p>This demo competition uses the Spin To Win mechanic. After purchasing a ticket, entrants spin a weighted prize wheel and discover their reward instantly. Prizes include site credit, physical mystery items, and the chance to try again.</p>'
+			. '<h3>Wheel segments</h3>'
+			. '<ul><li>Try Again</li>'
+			. '<li>£5 / £10 / £25 site credit</li>'
+			. '<li>Mystery Box (limited stock)</li>'
+			. '<li>Wireless Headphones (very limited)</li></ul>',
+		'stw_segments'    => array(
+			array( 'type' => 'no_win',     'label' => 'Try Again',   'weight' => 4.0 ),
+			array( 'type' => 'woo_wallet', 'label' => '£5 Credit',   'weight' => 3.0, 'wallet_amount' => 5.0,  'stock' => 20 ),
+			array( 'type' => 'woo_wallet', 'label' => '£10 Credit',  'weight' => 2.0, 'wallet_amount' => 10.0, 'stock' => 10 ),
+			array( 'type' => 'woo_wallet', 'label' => '£25 Credit',  'weight' => 1.0, 'wallet_amount' => 25.0, 'stock' => 5 ),
+			array( 'type' => 'physical',   'label' => 'Mystery Box', 'weight' => 0.5, 'physical_title' => 'Mystery Box', 'stock' => 5 ),
+			array( 'type' => 'physical',   'label' => 'Headphones',  'weight' => 0.2, 'physical_title' => 'Wireless Headphones', 'stock' => 2 ),
+		),
+	),
+
+	array(
+		'slug'            => 'demo-instant-win-drip',
+		'title'           => 'Demo Instant Win — Drip Feed',
+		'variant'         => 'instant_win_drip_feed',
+		'requires_plugin' => 'nera-instant-win-threshold/nera-instant-win-threshold.php',
+		'price'           => 5.00,
+		'min_tickets'     => 200,
+		'max_tickets'     => 1000,
+		'image_seed'      => 'instant-win-drip',
+		'short'           => 'Instant wins released gradually — by schedule, by ticket sell-through, or immediately.',
+		'description'     => '<p><strong>Instant prizes that drip-feed across the competition.</strong></p>'
+			. '<p>Unlike a standard instant-win, prizes here are gated by release rules. Some are live from day one, others unlock after a percentage of tickets are sold, and some appear on a scheduled date.</p>'
+			. '<h3>Release rules in this demo</h3>'
+			. '<ul><li><strong>Instant</strong> — £20 wallet credit, available immediately.</li>'
+			. '<li><strong>50% threshold</strong> — wireless headphones unlock once half the tickets are sold.</li>'
+			. '<li><strong>Scheduled</strong> — £100 wallet credit unlocks 2 days from launch.</li></ul>',
+		'instant_rules'   => array(
+			array(
+				'lty_ticket_number'        => '15',
+				'lty_prize_type'           => 'physical',
+				'lty_instant_winner_prize' => '£20 Wallet Credit',
+				'lty_prize_amount'         => '20',
+				'iwt_rule_type'            => 'instant',
+			),
+			array(
+				'lty_ticket_number'        => '64',
+				'lty_prize_type'           => 'physical',
+				'lty_instant_winner_prize' => 'Wireless Headphones',
+				'lty_prize_amount'         => '199',
+				'iwt_rule_type'            => 'ticket_pct',
+				'iwt_ticket_pct'           => 50,
+			),
+			array(
+				'lty_ticket_number'        => '123',
+				'lty_prize_type'           => 'physical',
+				'lty_instant_winner_prize' => '£100 Wallet Credit',
+				'lty_prize_amount'         => '100',
+				'iwt_rule_type'            => 'schedule',
+				'iwt_schedule_at_offset_days' => 2,
+			),
+		),
+	),
+
+	array(
 		'slug'        => 'bmw-m4-ended',
 		'title'       => '[ENDED] BMW M4 Competition — Draw Completed',
 		'variant'     => 'ended',

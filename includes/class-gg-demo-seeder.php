@@ -77,6 +77,17 @@ class GG_Demo_Seeder {
 			return new WP_Error( 'lottery_missing', __( 'Lottery for WooCommerce is not active.', 'nera-competitions-seeder' ) );
 		}
 
+		if ( ! empty( $spec['requires_plugin'] ) && ! self::plugin_active( $spec['requires_plugin'] ) ) {
+			return new WP_Error(
+				'gg_demo_plugin_missing',
+				sprintf(
+					/* translators: %s = plugin basename */
+					__( 'Skipped — requires plugin: %s', 'nera-competitions-seeder' ),
+					$spec['requires_plugin']
+				)
+			);
+		}
+
 		$existing = self::get_record( $spec['slug'] );
 		if ( $existing['product_id'] && get_post( $existing['product_id'] ) ) {
 			return new WP_Error(
@@ -112,6 +123,14 @@ class GG_Demo_Seeder {
 			wp_set_object_terms( $product_id, array( $term_id ), 'product_cat' );
 		}
 
+		// STW front-end banner gates on the `spin-to-win` product_cat slug.
+		if ( $spec['variant'] === 'spin_to_win' ) {
+			$stw_term_id = self::ensure_stw_category();
+			if ( $stw_term_id ) {
+				wp_set_object_terms( $product_id, array( $stw_term_id ), 'product_cat', true );
+			}
+		}
+
 		// Featured + gallery thumbnails.
 		$images = GG_Demo_Image::sideload_set( $product_id, $spec['image_seed'] );
 		if ( $images['featured'] ) {
@@ -126,10 +145,19 @@ class GG_Demo_Seeder {
 		}
 		$record['attachment_ids'] = $images['all'];
 
-		// Instant-win rules and their seeded winner logs.
-		if ( $spec['variant'] === 'instant_win' && ! empty( $spec['instant_rules'] ) ) {
+		// Spin To Win segments + initial segment stock rows.
+		if ( $spec['variant'] === 'spin_to_win' && ! empty( $spec['stw_segments'] ) ) {
+			self::apply_spin_to_win_segments( $product_id, $spec['stw_segments'] );
+		}
+
+		// Instant-win rules and their seeded winner logs. Drip-feed variant layers
+		// IWT release-rule meta on each created rule post.
+		if ( in_array( $spec['variant'], array( 'instant_win', 'instant_win_drip_feed' ), true ) && ! empty( $spec['instant_rules'] ) ) {
 			$rule_ids = self::create_instant_rules( $product_id, $spec['instant_rules'] );
 			if ( $rule_ids ) {
+				if ( $spec['variant'] === 'instant_win_drip_feed' ) {
+					self::apply_drip_feed_rule_meta( $rule_ids, $spec['instant_rules'] );
+				}
 				$record['winner_log_ids'] = self::seed_instant_winners( $product_id, $rule_ids, $spec['instant_rules'] );
 			}
 		}
@@ -248,6 +276,20 @@ class GG_Demo_Seeder {
 				$meta['_lty_ticket_number_type']     = '1';
 				$meta['_lty_closed']                 = 'yes';
 				break;
+
+			case 'spin_to_win':
+				$meta['_lty_ticket_generation_type'] = '1';
+				$meta['_lty_ticket_number_type']     = '1';
+				break;
+
+			case 'instant_win_drip_feed':
+				$meta['_lty_ticket_generation_type']       = '1';
+				$meta['_lty_ticket_number_type']           = '1';
+				$meta['_lty_instant_winners']              = 'yes';
+				$meta['_lty_display_instant_winner_image'] = 'yes';
+				$meta['_lty_instant_winner_display_mode']  = '1';
+				$meta['_nera_iwt_ticket_number_max']       = (string) $spec['max_tickets'];
+				break;
 		}
 
 		foreach ( $meta as $key => $value ) {
@@ -329,6 +371,72 @@ class GG_Demo_Seeder {
 		}
 
 		return $log_ids;
+	}
+
+	/**
+	 * Write Spin To Win product meta + initial segment stock rows.
+	 */
+	private static function apply_spin_to_win_segments( $product_id, array $segments_spec ) {
+		update_post_meta( $product_id, '_nera_stw_enabled', 'yes' );
+
+		$segments = array();
+		foreach ( $segments_spec as $seg ) {
+			$segments[] = array_merge(
+				array(
+					'id'      => 'seg_' . wp_generate_password( 8, false, false ),
+					'enabled' => true,
+					'weight'  => 1.0,
+				),
+				$seg
+			);
+		}
+
+		$json = wp_json_encode( $segments, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+		update_post_meta( $product_id, '_nera_stw_segments_json', wp_slash( $json ) );
+
+		if ( class_exists( 'Nera_STW_Segment_Stock' ) && class_exists( 'Nera_STW_Product_Meta' ) ) {
+			$normalized = Nera_STW_Product_Meta::get_segments( $product_id );
+			Nera_STW_Segment_Stock::sync_initial_from_segments( $product_id, $normalized );
+		}
+	}
+
+	/**
+	 * Layer IWT release-rule meta onto already-created instant-winner rule posts.
+	 *
+	 * @param int[] $rule_ids   Rule post IDs returned by create_instant_rules().
+	 * @param array $rule_specs Original rule meta specs (parallel array).
+	 */
+	private static function apply_drip_feed_rule_meta( array $rule_ids, array $rule_specs ) {
+		foreach ( $rule_ids as $i => $rule_id ) {
+			$spec = isset( $rule_specs[ $i ] ) ? $rule_specs[ $i ] : array();
+			$type = isset( $spec['iwt_rule_type'] ) ? (string) $spec['iwt_rule_type'] : 'instant';
+
+			update_post_meta( $rule_id, 'nera_iwt_public_rule_type', $type );
+
+			if ( $type === 'ticket_pct' ) {
+				$pct = isset( $spec['iwt_ticket_pct'] ) ? (int) $spec['iwt_ticket_pct'] : 50;
+				update_post_meta( $rule_id, 'nera_iwt_ticket_pct', max( 0, min( 100, $pct ) ) );
+			}
+
+			if ( $type === 'schedule' ) {
+				$offset_days = isset( $spec['iwt_schedule_at_offset_days'] ) ? (int) $spec['iwt_schedule_at_offset_days'] : 2;
+				$at_gmt_ts   = time() + $offset_days * DAY_IN_SECONDS;
+				$at_gmt      = gmdate( 'Y-m-d H:i:s', $at_gmt_ts );
+				$at_local    = get_date_from_gmt( $at_gmt, 'Y-m-d H:i' );
+				update_post_meta( $rule_id, 'nera_iwt_schedule_at_gmt', $at_gmt );
+				update_post_meta( $rule_id, 'nera_iwt_schedule_at_local', $at_local );
+			}
+		}
+	}
+
+	/**
+	 * Soft check for an optional dependency plugin by its basename.
+	 */
+	private static function plugin_active( $basename ) {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		return is_plugin_active( $basename );
 	}
 
 	/**
@@ -427,6 +535,27 @@ class GG_Demo_Seeder {
 		}
 	}
 
+	/**
+	 * Ensure the `spin-to-win` product category exists and return its term ID.
+	 * Matched by slug because the parent-theme banner gate uses
+	 * has_term('spin-to-win', 'product_cat', ...).
+	 */
+	private static function ensure_stw_category() {
+		$term = get_term_by( 'slug', 'spin-to-win', 'product_cat' );
+		if ( $term && ! is_wp_error( $term ) ) {
+			return (int) $term->term_id;
+		}
+		$created = wp_insert_term(
+			__( 'Spin To Win', 'nera-competitions-seeder' ),
+			'product_cat',
+			array( 'slug' => 'spin-to-win' )
+		);
+		if ( is_wp_error( $created ) ) {
+			return 0;
+		}
+		return (int) $created['term_id'];
+	}
+
 	public static function ensure_category() {
 		$term = get_term_by( 'name', GG_DEMO_PRODUCTS_CATEGORY, 'product_cat' );
 		if ( $term && ! is_wp_error( $term ) ) {
@@ -506,6 +635,13 @@ class GG_Demo_Seeder {
 					wp_delete_attachment( $thumb_id, true );
 				}
 			}
+
+			// STW segment stock rows do not cascade on product delete. Strip them
+			// here so re-seeding a wiped product starts from a clean slate.
+			global $wpdb;
+			$stw_table = $wpdb->prefix . 'nera_stw_segment_stock';
+			$wpdb->hide_errors();
+			$wpdb->delete( $stw_table, array( 'product_id' => $product_id ), array( '%d' ) );
 
 			if ( wp_delete_post( $product_id, true ) ) {
 				$count++;
