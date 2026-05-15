@@ -28,6 +28,3 @@ Seeded products include featured and gallery images when remote image sideloadin
 
 = 1.0.0 =
 * Initial release.
-
-
-test github 
