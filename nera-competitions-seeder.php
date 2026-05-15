@@ -1,9 +1,10 @@
 <?php
 /**
  * Plugin Name: Nera Competitions Seeder
+ * Plugin URI: https://github.com/Nera-Marketing/nera-competitions-seeder
  * Description: Seeds demo competition/lottery products covering every variant supported by Lottery for WooCommerce. Adds a page under Tools → Nera Competitions Seeder.
  * Version: 1.0.0
- * Author: Giveaway Guru
+ * Author: Nera
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * License: GPL-2.0-or-later
@@ -20,6 +21,9 @@ define( 'GG_DEMO_PRODUCTS_URL', plugin_dir_url( __FILE__ ) );
 define( 'GG_DEMO_PRODUCTS_VERSION', '1.0.0' );
 define( 'GG_DEMO_PRODUCTS_OPTION', 'gg_demo_products_seeded_ids' );
 define( 'GG_DEMO_PRODUCTS_CATEGORY', 'Demo Competitions' );
+
+require_once GG_DEMO_PRODUCTS_DIR . 'includes/github-updates.php';
+nera_competitions_seeder_bootstrap_plugin_update_checker( __FILE__ );
 
 require_once GG_DEMO_PRODUCTS_DIR . 'includes/class-gg-demo-fixtures.php';
 require_once GG_DEMO_PRODUCTS_DIR . 'includes/class-gg-demo-image.php';

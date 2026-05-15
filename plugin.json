@@ -1,0 +1,23 @@
+{
+	"name": "Nera Competitions Seeder",
+	"slug": "nera-competitions-seeder",
+	"version": "1.0.0",
+	"homepage": "https://github.com/Nera-Marketing/nera-competitions-seeder",
+	"download_url": "https://github.com/Nera-Marketing/nera-competitions-seeder/releases/download/v1.0.0/nera-competitions-seeder-1.0.0.zip",
+
+	"author": "Nera",
+	"author_homepage": "https://github.com/Nera-Marketing",
+
+	"requires": "6.0",
+	"tested": "6.8",
+	"requires_php": "7.4",
+	"last_updated": "2026-05-15 04:44:16",
+
+	"upgrade_notice": "Update for the latest demo competition seeder fixes and compatibility.",
+
+	"sections": {
+		"description": "<p>Seeds representative WooCommerce lottery competition products for development and demos. Requires <strong>WooCommerce</strong> and supports Lottery for WooCommerce product data.</p>",
+		"installation": "<p>Install WooCommerce and Lottery for WooCommerce, then install and activate this plugin. Use Tools &rarr; Nera Competitions Seeder to seed or wipe demo competitions.</p>",
+		"changelog": "<p>Release notes: <a href=\"https://github.com/Nera-Marketing/nera-competitions-seeder/releases\">GitHub releases</a>.</p>"
+	}
+}
