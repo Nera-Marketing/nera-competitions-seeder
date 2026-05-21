@@ -20,6 +20,14 @@ return array(
 		'min_tickets' => 100,
 		'max_tickets' => 5000,
 		'image_seed'  => 'cash-prize-random',
+		'image_urls'  => array(
+			'featured' => 'https://images.pexels.com/photos/15633962/pexels-photo-15633962.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/7680556/pexels-photo-7680556.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/4394806/pexels-photo-4394806.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/545065/pexels-photo-545065.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'       => 'Win £10,000 in cash. Tickets just £2.99. Winner drawn live one year from now.',
 		'description' => '<p><strong>£10,000 in cold, hard cash could be yours.</strong></p>'
 			. '<p>Enter this headline draw for a chance to walk away with ten grand. Every ticket is assigned a unique random number at checkout — no need to pick, the system does it for you. The more tickets you buy, the more chances you have.</p>'
@@ -39,6 +47,14 @@ return array(
 		'min_tickets' => 500,
 		'max_tickets' => 15000,
 		'image_seed'  => 'tesla-model-y',
+		'image_urls'  => array(
+			'featured' => 'https://images.pexels.com/photos/20019462/pexels-photo-20019462.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/30306584/pexels-photo-30306584.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/33322125/pexels-photo-33322125.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/12554296/pexels-photo-12554296.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'       => 'Win a brand-new Tesla Model Y Long Range. Sequentially numbered tickets — first come, first served.',
 		'description' => '<p><strong>Drive away in a brand-new Tesla Model Y Long Range.</strong></p>'
 			. '<p>This dream-car draw uses <em>sequentially numbered tickets</em>, meaning the first buyer gets ticket #1, the next gets #2, and so on. Buy early to secure a low number — many entrants believe lower numbers bring better luck.</p>'
@@ -57,6 +73,14 @@ return array(
 		'min_tickets' => 50,
 		'max_tickets' => 2000,
 		'image_seed'  => 'ps5-bundle',
+		'image_urls'  => array(
+			'featured' => 'https://images.pexels.com/photos/34625035/pexels-photo-34625035.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/32967534/pexels-photo-32967534.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/13189272/pexels-photo-13189272.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/34625041/pexels-photo-34625041.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'       => 'PS5 console + 3 top games + extra DualSense controller. Shuffled ticket numbers — fully random allocation.',
 		'description' => '<p><strong>The ultimate next-gen gaming bundle.</strong></p>'
 			. '<p>Win a PlayStation 5 (disc edition) plus three AAA games of your choice and a second DualSense controller. Tickets are assigned using shuffled numbering — your ticket number is randomised within the available pool, so no buyer can predict what they will get.</p>'
@@ -75,6 +99,14 @@ return array(
 		'min_tickets'  => 100,
 		'max_tickets'  => 3000,
 		'image_seed'   => 'iphone-16-pro',
+		'image_urls'   => array(
+			'featured' => 'https://images.pexels.com/photos/3945672/pexels-photo-3945672.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/3945691/pexels-photo-3945691.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/18311092/pexels-photo-18311092.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/3945695/pexels-photo-3945695.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'        => 'Buy a ticket, win INSTANTLY. Three guaranteed instant prizes plus the main iPhone 16 Pro draw.',
 		'description'  => '<p><strong>Instant wins on selected tickets — plus the main prize!</strong></p>'
 			. '<p>This is the only competition where you might win <em>before the draw even closes</em>. Three lucky tickets carry guaranteed instant prizes; pull one of them and your prize is awarded immediately at checkout.</p>'
@@ -114,6 +146,14 @@ return array(
 		'min_tickets' => 100,
 		'max_tickets' => 2500,
 		'image_seed'  => 'macbook-pro',
+		'image_urls'  => array(
+			'featured' => 'https://images.pexels.com/photos/2506947/pexels-photo-2506947.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/8068269/pexels-photo-8068269.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/11621727/pexels-photo-11621727.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/4523028/pexels-photo-4523028.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'       => 'Choose your own lucky ticket number. Win a MacBook Pro 14" with M4 chip.',
 		'description' => '<p><strong>You pick the ticket. You pick the luck.</strong></p>'
 			. '<p>Unlike our other draws, this one lets you hand-pick your ticket number from those still available. Got a lucky number? A favourite date? Grab it before someone else does.</p>'
@@ -133,6 +173,14 @@ return array(
 		'min_tickets' => 500,
 		'max_tickets' => 10000,
 		'image_seed'  => 'rolex-submariner',
+		'image_urls'  => array(
+			'featured' => 'https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/16739804/pexels-photo-16739804.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/19810831/pexels-photo-19810831.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/27531462/pexels-photo-27531462.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'       => 'Win a Rolex Submariner worth £10,000+. Answer the skill question correctly to enter.',
 		'description' => '<p><strong>An icon of horology could be on your wrist.</strong></p>'
 			. '<p>Win a brand-new Rolex Submariner Date in stainless steel — the most recognisable luxury sports watch ever made. UK price tag is north of £10,000, but it could be yours for the price of a ticket.</p>'
@@ -164,6 +212,14 @@ return array(
 		'min_tickets'     => 100,
 		'max_tickets'     => 500,
 		'image_seed'      => 'spin-to-win',
+		'image_urls'      => array(
+			'featured' => 'https://images.pexels.com/photos/7594162/pexels-photo-7594162.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/7594177/pexels-photo-7594177.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/7594195/pexels-photo-7594195.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/7594193/pexels-photo-7594193.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'           => 'Spin the prize wheel after entry. Six segments — site credit, mystery box, headphones or try again.',
 		'description'     => '<p><strong>Every ticket spins the wheel.</strong></p>'
 			. '<p>This demo competition uses the Spin To Win mechanic. After purchasing a ticket, entrants spin a weighted prize wheel and discover their reward instantly. Prizes include site credit, physical mystery items, and the chance to try again.</p>'
@@ -191,6 +247,14 @@ return array(
 		'min_tickets'     => 200,
 		'max_tickets'     => 1000,
 		'image_seed'      => 'instant-win-drip',
+		'image_urls'      => array(
+			'featured' => 'https://images.pexels.com/photos/6087540/pexels-photo-6087540.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/1303087/pexels-photo-1303087.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/1666070/pexels-photo-1666070.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/5872362/pexels-photo-5872362.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'           => 'Instant wins released gradually — by schedule, by ticket sell-through, or immediately.',
 		'description'     => '<p><strong>Instant prizes that drip-feed across the competition.</strong></p>'
 			. '<p>Unlike a standard instant-win, prizes here are gated by release rules. Some are live from day one, others unlock after a percentage of tickets are sold, and some appear on a scheduled date.</p>'
@@ -233,6 +297,14 @@ return array(
 		'min_tickets' => 1000,
 		'max_tickets' => 20000,
 		'image_seed'  => 'bmw-m4',
+		'image_urls'  => array(
+			'featured' => 'https://images.pexels.com/photos/21287380/pexels-photo-21287380.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			'gallery'  => array(
+				'https://images.pexels.com/photos/31909828/pexels-photo-31909828.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/27353884/pexels-photo-27353884.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+				'https://images.pexels.com/photos/37311066/pexels-photo-37311066.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800&fit=crop&dpr=1',
+			),
+		),
 		'short'       => 'This draw has closed. Winner announced and contacted. Example of an ended competition.',
 		'description' => '<p><strong>This competition has now ended.</strong></p>'
 			. '<p>The BMW M4 Competition draw closed last week. The winning ticket has been drawn and the lucky winner contacted directly. Thank you to everyone who entered — keep an eye on our active competitions for more chances to win supercar-grade prizes.</p>'
