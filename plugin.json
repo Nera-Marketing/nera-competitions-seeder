@@ -1,9 +1,9 @@
 {
 	"name": "Nera Competitions Seeder",
 	"slug": "nera-competitions-seeder",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"homepage": "https://github.com/Nera-Marketing/nera-competitions-seeder",
-	"download_url": "https://github.com/Nera-Marketing/nera-competitions-seeder/releases/download/v1.0.0/nera-competitions-seeder-1.0.0.zip",
+	"download_url": "https://github.com/Nera-Marketing/nera-competitions-seeder/releases/download/v1.0.1/nera-competitions-seeder-1.0.1.zip",
 
 	"author": "Nera",
 	"author_homepage": "https://github.com/Nera-Marketing",
@@ -11,7 +11,7 @@
 	"requires": "6.0",
 	"tested": "6.8",
 	"requires_php": "7.4",
-	"last_updated": "2026-05-15 04:44:16",
+	"last_updated": "2026-05-21 08:57:23",
 
 	"upgrade_notice": "Update for the latest demo competition seeder fixes and compatibility.",
 

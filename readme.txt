@@ -4,7 +4,7 @@ Tags: woocommerce, lottery, competitions, demo data, seeder
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 
 Seeds representative WooCommerce lottery competition products for development and demos.
@@ -25,6 +25,12 @@ Seeded products include featured and gallery images when remote image sideloadin
 4. Open **Tools > Nera Competitions Seeder** to seed or wipe demo competitions.
 
 == Changelog ==
+
+= 1.0.1 =
+* Added STW (Subscribe to Win) product type seeding.
+* Added Drip feed product type seeding.
+* Improved image sideloading reliability.
+* Admin page improvements.
 
 = 1.0.0 =
 * Initial release.
