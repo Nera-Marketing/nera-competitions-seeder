@@ -132,7 +132,7 @@ class GG_Demo_Seeder {
 		}
 
 		// Featured + gallery thumbnails.
-		$images = GG_Demo_Image::sideload_set( $product_id, $spec['image_seed'] );
+		$images = GG_Demo_Image::sideload_set( $product_id, $spec );
 		if ( $images['featured'] ) {
 			set_post_thumbnail( $product_id, $images['featured'] );
 		}
